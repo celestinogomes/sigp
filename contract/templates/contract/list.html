@@ -1,0 +1,137 @@
+{% extends 'layout/base.html' %} 
+{% load humanize %}
+{% block content %}
+{% load static %}
+<div class="page-wrapper">
+    <div class="page-header d-print-none">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <div class="page-pretitle">Kontratu</div>
+                    <h2 class="page-title">{{ title }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="card shadow-sm">
+                <div class="card-header justify-content-between align-items-center bg-transparent">
+                    <h3 class="card-title text-primary font-weight-bold">{{title}}</h3>
+                </div>
+                
+                <div class="card-body p-0">
+                    <div id="table-default" class="table-responsive p-3">
+                        <table id="myTable" class="table table-vcenter table-hover card-table">
+                            <thead>
+                                <tr>
+                                    <th class="w-1">No</th>
+                                    <th>Projeto</th>
+                                    <th>Nu.Kontratu</th>
+                                    <th>Kompanhia</th>
+                                    <th>Periodo Original</th>
+                                    <th>Montante Original</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-tbody">
+                                {% for data in data %}
+                                <tr>
+                                    <td class="text-muted">{{ forloop.counter }}</td>
+                                    <td class="font-weight-medium text-dark">  
+                                        <a href="{% url 'proj-detail' data.project.uuid %}#kontratu">{{ data.project.name }}</a>
+                                    </td>
+                                    <td>{{data.number|default:"-"}}</td>
+                                    <td>{{data.company|default:"-"}}</td>
+                                    <td>{{data.start_date|default:"-"}} - {{data.end_date|default:"-"}}</td>
+                                    <td>{{data.amount|default:"-"|intcomma}}</td>
+                                    <td>{{data.status|default:"-"}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .dt-buttons {
+        margin-bottom: 15px;
+    }
+    .dt-buttons .btn-excel {
+        background: #28a745 !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 4px !important;
+        padding: 0.3rem 0.8rem !important;
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+        transition: background 0.2s ease;
+    }
+    .dt-buttons .btn-excel:hover {
+        background: #218838 !important;
+    }
+    .dataTables_wrapper .dataTables_filter {
+        margin-bottom: 15px;
+    }
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #dacfe3;
+        border-radius: 4px;
+        padding: 4px 8px;
+        margin-left: 8px;
+    }
+    /* Sedikit penyesuaian gaya untuk SearchBuilder agar rapi */
+    .dtsb-searchBuilder {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 4px;
+    }
+</style>
+{% endblock content %}
+
+{% block script %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/searchbuilder/1.6.0/css/searchBuilder.dataTables.min.css">
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+
+<script src="https://cdn.datatables.net/searchbuilder/1.6.0/js/dataTables.searchBuilder.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#myTable').DataTable({
+        // Karakter 'Q' di dalam dom memicu pemuatan SearchBuilder di atas tabel
+        dom: 'QBlfrtip',        
+        searching: true,
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: 'Download Excel', 
+                className: 'btn-excel', 
+                exportOptions: {
+                    columns: ':visible' 
+                }
+            }
+        ],
+        // Opsional: Anda bisa mengecualikan kolom tertentu dari SearchBuilder (misal: kolom No dan Action)
+        searchBuilder: {
+            columns: [1, 2, 3, 4, 5, 6, 7, 8] // Hanya mengaktifkan pencarian untuk kolom data teks
+        }
+    });
+});
+</script>
+{% endblock script %}

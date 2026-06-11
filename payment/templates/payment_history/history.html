@@ -1,0 +1,74 @@
+{% extends 'layout/base.html' %}
+{% load humanize %}
+{% block content %}
+<div class="container-fluid pt-4">
+    <div class="mb-3">
+        <div class="page-pretitle"><a href="{% url 'proj-detail' project.uuid %}">Projeto</a></div>
+        <h2 class="page-title">{{ title }}</h2>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-transparent py-3">
+            <h3 class="card-title text-warning font-weight-bold mb-1">
+                <i class="fa fa-history mr-2"></i> Historia Pagamento (Arkivo) - {{project.name}}
+            </h3>
+        </div>
+
+        <div class="card-body p-0">
+            {% if history_payments %}
+                <div class="table-responsive">
+                    <table class="table table-vcenter card-table table-hover mb-0">
+                        <thead class="bg-light text-muted" style="font-size: 0.7rem; letter-spacing: 0.05em;">
+                            <tr>
+                                <th class="text-uppercase font-weight-bold px-3" style="width: 50px;">Nu.</th>
+                                <th class="text-uppercase font-weight-bold">Status/Info</th>
+                                <th class="text-uppercase font-weight-bold">OBS</th>
+                                <th class="text-uppercase font-weight-bold">Data Pagamento</th>
+                                <th class="text-uppercase font-weight-bold text-right">Progresu Fisiku (%)</th>
+                                <th class="text-uppercase font-weight-bold text-right">Montante ($)</th>
+                                <th class="text-uppercase font-weight-bold text-right">Kumulativu ($)</th>
+                                <th class="text-uppercase font-weight-bold text-center">Kumulativu (%)</th>
+                                <th class="text-uppercase font-weight-bold text-right">Balansu ($)</th>
+                                <th class="text-uppercase font-weight-bold text-center">Balansu (%)</th>
+                                <th class="text-uppercase font-weight-bold">Nu. Prosesu</th>
+                                <th class="text-uppercase font-weight-bold">Arkiva Husi</th>
+                                <th class="text-uppercase font-weight-bold">Data Arkivo</th>
+                            </tr>
+                        </thead>
+                        <tbody style="font-size: 0.85rem;">
+                            {% for history in history_payments %}
+                                <tr>
+                                    <td class="px-3 text-muted">{{ forloop.counter }}</td>
+                                    <td>
+                                        <span class="badge badge-secondary text-uppercase">{{ history.info|default:"Archived" }}</span>
+                                    </td>
+                                    <td>{{ history.description }}</td>
+                                    <td>{{ history.date }}</td>
+                                    <td class="text-right">{{ history.physical_progress|default:"0.00"|intcomma }}%</td>
+                                    <td class="text-right font-weight-bold" style="background-color: rgba(240, 240, 240, 0.4);">
+                                        {{ history.payment_amount|intcomma }}
+                                    </td>
+                                    <td class="text-right">{{ history.comulative_amount|intcomma }}</td>
+                                    <td class="text-center">
+                                        <span class="badge badge-light border">{{ history.comulative_percent }}%</span>
+                                    </td>
+                                    <td class="text-right">{{ history.balance_amount|intcomma }}</td>
+                                    <td class="text-center">{{ history.balance_percent }}%</td>
+                                    <td><code class="text-dark">{{ history.process_number|default:"-" }}</code></td>
+                                    <td class="small text-muted">{{ history.user.username|default:"-" }}</td>
+                                    <td class="small text-muted">{{ history.datetime|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="fa fa-history fa-2x mb-3 opacity-50"></i>
+                    <p class="mb-0">Seidauk iha dadus historia pagamento ba projetu ida ne'e.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

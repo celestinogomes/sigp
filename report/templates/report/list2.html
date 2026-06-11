@@ -1,0 +1,141 @@
+{% extends 'layout/base.html' %} 
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="page-wrapper">
+    <div class="page-header d-print-none">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <h2 class="page-title">{{ title }} </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <div class="container-xl">
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{title}}</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="table card-table table-vcenter text-nowrap table-hover table-bordered">
+                        <thead class="bg-light">
+                            <tr>
+                                <th colspan="8" class="text-center">Informasaun Projeto</th>
+                                <th colspan="4" class="text-center">Lokal Implementasaun</th>
+                                <th colspan="5" class="text-center">Data Kontratu Original</th>
+                                <th colspan="4" class="text-center">Contract Amendement</th>
+                                <th rowspan="2" class="text-center">Montante Kontratu Final</th>
+                                <th rowspan="2" class="text-center">Montante Kontratu estimativa <br> (FOUN ADN SEIDAUK VERIFIKA)</th>
+                                <th colspan="3" class="text-center">Alokasaun</th>
+                                <th colspan="7" class="text-center">Pagamento</th>
+                                <th rowspan="2" class="text-center">Estadu atual</th>
+                                <th rowspan="2" class="text-center">Informasaun Adisional <br> / Justifikasaun</th>
+                            </tr>
+                            <tr>
+                                <th>Nu.</th>
+                                <th>Kodigo atividade</th>
+                                <th>Programa</th>
+                                <th>Sub Programa</th>
+                                <th>Linas Ministerio <br> / Projetu Nain</th>
+                                <th>Fontes <br> Orsamentu</th>
+                                <th>Kompanha/Vendors</th>
+                                <th>Projeto</th>
+                                <!-- LOCATION -->
+                                <th>Municipiu</th>
+                                <th>Postu Administrativu</th>
+                                <th>Suku</th>
+                                <th>Aldeia</th>
+                                <th>Numero Kontratu</th>
+                                <th>Data inicio <br> Kontratu</th>
+                                <th>Data Termina <br> Kontratu</th>
+                                <th>Montante Kontratu <br> Original</th>
+                                <th>Tipu Projeto</th>
+                                <!-- AMANDMENT -->
+                                <th>Amandmen Kustu</th>
+                                <th>Amandmen Kustu  <br> Ba Dala</th>
+                                <th>Amandmen Tempu <br> Foun</th>
+                                <th>Amandmen Tempu  <br>Ba Dala</th>
+                                <th>Alokasaun FI {{year_selected}} <br> Original (USD)</th>
+                                <th>Transferensia <br> (-/+ ENVIROMENT)</th>
+                                <th>Alokasaun orsamentu FI <br> {{year_selected}}  / Atual (USD)</th>
+                                <th>Data Pagamento</th>
+                                <th>Pagamento ($)</th>
+                                <th>Kumulativo ($)</th>
+                                <th>Kumulativo (%) </th>
+                                <th>Balansu ($)</th>
+                                <th>Balansu (%) </th>
+                                <th>Progresu Fisiku (%) </th>
+                            </tr>
+                            
+                        </thead>
+                        <tbody>
+                            {% for item in project_list_data %}
+                            <tr>
+                                <td class="text-center">{{ item.no }}</td>
+                                <td>{{ item.activity_code|default:"-" }}</td>
+                                <td class="text-wrap" style="min-width: 120px;">({{ item.program_code }}) {{ item.program_name }} </td>
+                                <td class="text-wrap" style="min-width: 120px;">({{ item.sub_program_code }}) {{item.sub_program_name}}</td>
+                                <td class="text-wrap">{{ item.owner_code }}</td>
+                                <td>{{ item.fund_code }}</td>
+                                <td class="text-wrap" style="max-width: 150px;">{{item.company}}</td> 
+                                <td class="text-wrap" style="max-width: 250px;"><strong class="text-dark"> <a href="{% url 'proj-detail' item.uuid %}">{{ item.project_name }}</a> </strong></td>
+                                <!-- LOCATION -->
+                                <td>{{ item.municipality }}</td>
+                                <td>{{ item.administrative_post }}</td>
+                                <td>{{ item.village }}</td>
+                                <td>{{item.aldeia}}</td> 
+                                <!-- CONTRACT -->
+                                <td>{{ item.contract_number }}</td>
+                                <td>{{ item.contract_start }}</td>
+                                <td>{{ item.contract_end }}</td>
+                                <td class="text-end">{{ item.contract_original|intcomma }}</td>
+                                <td>{{ item.project_type }}</td>
+                                
+                                <td class="text-end">{{ item.amend_cost_amount|intcomma }}</td>
+                                <td class="text-center"><span class="badge bg-azure">{{ item.total_amend_amount_count }}</span></td>
+                                <td>{{ item.amend_time_date }}</td>
+                                <td class="text-center"><span class="badge bg-azure">{{ item.total_amend_time_count }}</span></td>
+                                
+                                <td class="text-end text-danger">{{ item.contract_final|intcomma }}</td>
+                                <td class="text-end text-muted">{{ item.owner_estimation|intcomma }}</td>
+                                
+                                <td class="text-end text-primary">USD {{ item.alloc_original|intcomma }}</td>
+                                <td class="text-end">
+                                    <span class="text-teal">USD {{ item.transfer_amount|intcomma }}</span> <br>
+                                    <small class="text-muted small">({{ item.transfer_count_info }})</small>
+                                </td>
+                                <td class="text-end text-primary">USD {{ item.alloc_total|intcomma }}</td>
+                                
+                                <td>{{ item.payment_date }}</td>
+                                <td class="text-center">{{ item.payment|intcomma}}</td>
+                                <td class="text-end text-success">USD {{ item.payment_cumulative|intcomma }}</td>
+                                <td class="text-center text-success">{{ item.payment_cumulative_percent|floatformat:2 }}%</td>
+                                <td class="text-end text-warning">USD {{ item.payment_balance|intcomma }}</td>
+                                <td class="text-center text-warning">{{ item.payment_balance_percent|floatformat:2 }}%</td>
+                                <td class="text-center">{{item.physical_progress}}</td> 
+                                <td class="text-center">{{item.status}}</td>
+                                <td style="min-width: 250px; vertical-align: top;">
+                                    <div style="max-height: 100px; overflow-y: auto; white-space: normal; padding-right: 5px;">
+                                        <small class="text-muted">{{ item.justification }}</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="34" class="text-center text-muted py-4">-</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}

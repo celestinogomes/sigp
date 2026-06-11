@@ -37,6 +37,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    # IMPORTED PACKAGE
+    'crispy_forms',
+    'crispy_bootstrap4',
+    'widget_tweaks',
+    # APPS
+    'main',
+    'project',
+    'allocation',
+    'amendment',
+    'contract',
+    'payment',
+    'accounts',
+    'funsionariu',
+    'custom',
+    'report'
 ]
 
 MIDDLEWARE = [
@@ -50,6 +66,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'sigp_fi.urls'
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap4'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEMPLATES = [
     {
@@ -61,6 +79,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'main.context_processors.user_group',
+                'main.context_processors.user_programs_processor'
             ],
         },
     },
@@ -104,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dili'
 
 USE_I18N = True
 
@@ -114,9 +134,32 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+import os
+
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+
+# Login Redirect URL
+LOGIN_REDIRECT_URL = 'index'
+# Login URL
+LOGIN_URL = 'user_login'
+LOGOUT_REDIRECT_URL = '/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+from django.contrib.messages import constants as messages_constants
+MESSAGE_TAGS = {
+    messages_constants.DEBUG : 'debug',
+    messages_constants.INFO : 'info',
+    messages_constants.SUCCESS : 'success',
+    messages_constants.WARNING : 'warning',
+    messages_constants.ERROR : 'danger',
+}

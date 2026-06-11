@@ -1,3 +1,6 @@
 from django.contrib import admin
+from contract.models import *
 
-# Register your models here.
+
+admin.site.register(Contract)
+admin.site.register(ContractAmendment)

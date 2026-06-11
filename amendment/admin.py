@@ -1,3 +1,5 @@
 from django.contrib import admin
+from amendment.models import AmendmenTime, AmendmenAmount
 
-# Register your models here.
+admin.site.register(AmendmenAmount)
+admin.site.register(AmendmenTime)

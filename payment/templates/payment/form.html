@@ -1,0 +1,55 @@
+{% extends 'layout/base.html' %} 
+{% load crispy_forms_tags %}
+{% block content %}
+{% load static %}
+<div class="page-wrapper">
+    <div class="page-header d-print-none">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <div class="page-pretitle"><a href="{% url 'proj-detail' uuid %}">Projeto</a></div>
+                    <h2 class="page-title">{{ title }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <div class="container-xl">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="card shadow-sm">
+                <div class="card-header justify-content-between align-items-center bg-transparent">
+                    <h3 class="card-title text-primary font-weight-bold">{{ subtitle }}</h3>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="POST" action="" novalidate>
+                        {% csrf_token %}                        
+                        {% crispy form %}
+                        
+                        
+                        <div class="form-group mt-4 text-end">
+                            <a href="{% url 'proj-detail' uuid %}" class="btn btn-light me-2">Kansela</a>
+                            <button type="submit" class="btn btn-primary">
+                                Rai Dadus
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block script %}
+{% endblock script %}

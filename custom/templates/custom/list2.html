@@ -1,0 +1,173 @@
+{% extends 'layout/base.html' %} 
+{% load crispy_forms_tags %}
+{% block content %}
+{% load static %}
+<div class="page-wrapper">
+    <div class="page-header d-print-none">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <div class="page-pretitle">Dados Geral</div>
+                    <h2 class="page-title">{{ title }}</h2>
+                </div>
+                <div class="col-auto ms-auto d-print-none">
+                    {% if group != 'director' %}
+                    <button class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-add">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
+                        Aumenta {{ topic }}
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="card shadow-sm">
+                <div class="card-header justify-content-between align-items-center bg-transparent">
+                    <h3 class="card-title text-primary font-weight-bold">Lista {{ topic }}</h3>
+                </div>
+                
+                <div class="card-body p-0">
+                    <div id="table-default" class="table-responsive p-3">
+                        <table id="myTable" class="table table-vcenter table-hover card-table">
+                            <thead>
+                                <tr>
+                                    <th class="w-1">No</th>
+                                    <th>{{ topic }}</th>
+                                    <th class="w-1 text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-tbody">
+                                {% for data in data %}
+                                <tr>
+                                    <td class="text-muted">{{ forloop.counter }}</td>
+                                    <td class="font-weight-medium text-dark">  
+                                        {% if data.code %}
+                                            <span class="badge bg-blue-lt me-2">{{ data.code }}</span>
+                                        {% endif %}
+                                        {{ data.name }}
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-warning btn-sm"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modal-update-{{ data.id }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" /><path d="M13.5 6.5l4 4" /></svg>
+                                            Altera
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% for data in data %}
+<div class="modal modal-blur fade" id="modal-update-{{ data.id }}" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ data.id }}">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title font-weight-bold text-dark">Update {{ topic }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-start py-2">
+                    <div class="mb-3">
+                        <label class="form-label font-weight-medium">Naran {{ topic }}</label>
+                        <input type="text" name="name" value="{{ data.name }}" class="form-control" required placeholder="Hakerek naran...">
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">Kansela</button>
+                    <button type="submit" class="btn btn-primary">Update Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<div class="modal modal-blur fade" id="modal-add" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header border-0">
+                <h5 class="modal-title font-weight-bold text-dark">Aumenta {{ topic }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-start">
+                {% crispy form %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dt-buttons .btn-excel {
+        background: #28a745 !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 4px !important;
+        padding: 0.3rem 0.8rem !important;
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+        transition: background 0.2s ease;
+    }
+    .dt-buttons .btn-excel:hover {
+        background: #218838 !important;
+    }
+    .dataTables_wrapper .dataTables_filter {
+        margin-bottom: 15px;
+    }
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #dacfe3;
+        border-radius: 4px;
+        padding: 4px 8px;
+        margin-left: 8px;
+    }
+</style>
+{% endblock content %}
+
+{% block script %}
+  <!-- CSS DataTables & Buttons -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+
+<!-- JS jQuery (DataTables butuh jQuery) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- JS DataTables -->
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+<!-- JS Buttons & JSZip (Untuk Excel) -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+    $('#myTable').DataTable({
+        dom: 'Bfrtip',        
+        searching: true,
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: 'Download Excel', 
+                className: 'btn-excel', 
+                exportOptions: {
+                    columns: ':visible' 
+                }
+            }
+        ],
+        
+    });
+});
+</script>
+{% endblock script %}

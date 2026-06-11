@@ -1,0 +1,135 @@
+{% extends 'layout/base.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="page-wrapper">
+    <div class="page-body">
+        <div class="container-xl">
+            
+            <div class="row row-cards mb-4">
+              <div class="col-sm-6 col-lg-4">
+                  <div class="card card-sm bg-primary-lt">
+                      <div class="card-body">
+                          <div class="row align-items-center">
+                              <div class="col-auto">
+                                  <span class="bg-primary text-white avatar">
+                                      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M16 3l0 4" /><path d="M8 3l0 4" /><path d="M4 11l16 0" /><path d="M12 16l-1 0" /></svg>
+                                  </span>
+                              </div>
+                              <div class="col">
+                                  <div class="font-weight-medium text-uppercase text-muted tracking-wider small">
+                                    <a href="{% url 'r-pay-today' 'today' %}">
+
+                                        Pagamentu Loron Ida Ne
+                                    </a>
+                                    </div>
+                                  <div class="h2 mb-1 font-weight-bold text-primary">USD {{ payments.today|intcomma }}</div>
+                                  <div class="text-secondary small">
+                                      <strong>{{ projects.today }}</strong> Projetu
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              
+              <div class="col-sm-6 col-lg-4">
+                  <div class="card card-sm bg-success-lt">
+                      <div class="card-body">
+                          <div class="row align-items-center">
+                              <div class="col-auto">
+                                  <span class="bg-success text-white avatar">
+                                      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 8l-2 2l2 2" /><path d="M14 14l2 -2l-2 -2" /><path d="M4 6v6a8 8 0 1 0 16 0v-6" /><path d="M4 6h16" /></svg>
+                                  </span>
+                              </div>
+                              <div class="col">
+                                  <div class="font-weight-medium text-uppercase text-muted tracking-wider small">
+                                    <a href="{% url 'r-pay-today' 'week' %}">
+
+                                        Pagamentu Semana Ida Ne'e 
+                                    </a>
+                                </div>
+                                  <div class="h2 mb-1 font-weight-bold text-success">USD {{ payments.week|intcomma }}</div>
+                                  <div class="text-secondary small">
+                                      <strong>{{ projects.week }}</strong> Projetu
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="col-sm-6 col-lg-4">
+                  <div class="card card-sm bg-purple-lt">
+                      <div class="card-body">
+                          <div class="row align-items-center">
+                              <div class="col-auto">
+                                  <span class="bg-purple text-white avatar">
+                                      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 8v4l3 3" /></svg>
+                                  </span>
+                              </div>
+                              <div class="col">
+                                  <div class="font-weight-medium text-uppercase text-muted tracking-wider small">
+                                    <a href="{% url 'r-pay-today' 'month' %}">
+                                        Pagamentu Fulan Ida Ne'e 
+                                    </a>
+                                    </div>
+                                  <div class="h2 mb-1 font-weight-bold text-purple">USD {{ payments.month|intcomma }}</div>
+                                  <div class="text-secondary small">
+                                      <strong>{{ projects.month }}</strong> Projetu
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+            <div class="card card-lg">
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-12 markdown">
+                            <h3>Bemvindu, {{ user.first_name }} {{ user.last_name }}</h3>
+                            <blockquote class="blockquote">
+                                Sistema Tracking Pagamentu ba Secretariado de Grande Projetu (SGP) mak hanesan sistema ne'ebe mak utiliza atu Tracking
+                                ka monitoriza pagamentu husi projetu hirak ne'ebe mak eziste iha rai laran.
+                            </blockquote>
+                            
+                            <div class="alert alert-important alert-warning level mb-4" role="alert">
+                                <div class="d-flex">
+                                    <div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v2m0 4v.01" /><path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75" /></svg>
+                                    </div>
+                                    <div>
+                                        <strong>Nota Seguransa:</strong> Halo favor <a href="{% url 'user_logout' %}" class="alert-link">Logout</a> husi sistema ida ne'e, antes de husik ita-boot nia komputador/dispozitivu.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h4 class="card-title text-dark">Programma ne’ebé Ita Boot hare mak hanesan:</h4>
+                            
+                            {% if user_programs %}
+                                <div class="col-md-6">
+                                    <ul class="list-group list-group-flush border">
+                                        {% for prog in user_programs %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <span><span class="badge bg-blue-lt me-2">PROG</span> {{ prog.name }}</span>
+                                                <span class="badge bg-green-lt px-2 py-1">Ativu</span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% else %}
+                                <div class=" bg-light py-4 text-center border">
+                                    <p class="text-muted mb-0 small">Ita boot laiha asesu ba programa ida.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

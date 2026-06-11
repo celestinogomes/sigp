@@ -1,0 +1,139 @@
+{% load static %}
+{% load static %}
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta19
+* @link https://tabler.io
+* Copyright 2018-2023 The Tabler Authors
+* Copyright 2018-2023 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>{{ title }}</title>
+    <link rel="shortcut icon" href="{% static 'images/emblema.png' %}" type="image/x-icon">
+    <!-- CSS files -->
+    <link href="{% static 'dist/css/tabler.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'dist/css/tabler-flags.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'dist/css/tabler-payments.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'dist/css/tabler-vendors.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'dist/css/demo.min.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'plugins/datatables-searchbuilder/css/searchBuilder.dataTables.min.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'plugins/icons/tabler-icons.min.css' %}" /> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+    <style>
+      @import url('https://rsms.me/inter/inter.css');
+      :root {
+      	--tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+      }
+      body {
+      	font-feature-settings: "cv03", "cv04", "cv11";
+      }
+    </style>
+    {% block customstyle %}
+    {% endblock %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+  </head>
+  <body >
+    {% csrf_token %}
+    <script src="{% static 'dist/js/demo-theme.min.js' %}"></script>
+    <div class="page">
+      {% include 'layout/header.html' %}
+      <div class="page-wrapper">
+        <div id="django-messages-container">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} p-2 alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+        {% block content %}
+        {% endblock %}
+        {% include 'layout/footer.html' %}
+      </div>
+    </div>
+    <!-- jQuery -->
+    <script src="{% static 'plugins/jquery/js/jquery.min.js' %}"></script>
+    <!-- Libs JS -->
+    <script src="{% static 'dist/libs/apexcharts/dist/apexcharts.min.js' %}" defer></script>
+    <script src="{% static 'dist/libs/jsvectormap/dist/js/jsvectormap.min.js' %}" defer></script>
+    <script src="{% static 'dist/libs/jsvectormap/dist/maps/world.js' %}" defer></script>
+    <script src="{% static 'dist/libs/jsvectormap/dist/maps/world-merc.js' %}" defer></script>
+    <!-- Tabler Core -->
+    <script src="{% static 'dist/js/tabler.min.js' %}" defer></script>
+    <script src="{% static 'dist/js/demo.min.js' %}" defer></script>
+    <!-- DataTables  & Plugins -->
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+    <script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+    <script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+    <script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-searchbuilder/js/dataTables.searchBuilder.min.js' %}"></script>
+    <script>
+        $(function() {
+          $("#example1")
+            .DataTable({
+              responsive: true,
+              lengthChange: true,
+              autoWidth: false,
+              buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+            })
+            .buttons()
+            .container()
+            .appendTo("#example1_wrapper .col-md-6:eq(0)");
+            $("#example2").DataTable({
+              paging: true,
+              lengthChange: true,
+              searching: true,
+              ordering: true,
+              info: true,
+              autoWidth: false,
+              responsive: true,
+              searchBuilder: true,
+            });
+        });
+        
+    </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Ambil semua elemen alert di dalam container messages
+      const alerts = document.querySelectorAll('#django-messages-container .alert');
+      
+      alerts.forEach(function(alert) {
+        // Set waktu hilangnya alert (3000ms = 3 detik)
+        setTimeout(function() {
+          // Menggunakan Bootstrap class/plugin untuk menutup alert dengan efek transisi halus
+          if (typeof bootstrap !== 'undefined' && bootstrap.Alert) {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+          } else {
+            // Fallback jika library Bootstrap JS belum/tidak termuat sempurna
+            alert.style.transition = "opacity 0.5s ease";
+            alert.style.opacity = "0";
+            setTimeout(() => alert.remove(), 500);
+          }
+        }, 3000); 
+      });
+    });
+  </script>
+    {% block script %}
+    {% endblock %}
+  </body>
+</html>
