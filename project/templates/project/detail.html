@@ -510,6 +510,7 @@
                                             <th class="text-uppercase font-weight-bold text-center py-3">Komentariu</th>
                                             <th class="text-uppercase font-weight-bold py-3">Kria husi</th>
                                             <th class="text-uppercase font-weight-bold py-3">Datetime</th>
+                                            <th class="text-uppercase font-weight-bold py-3">#</th>
                                         </tr>
                                     </thead>
                                     <tbody style="font-size: 0.875rem;">
@@ -522,6 +523,11 @@
                                                 <td>{{obj.comments|default:"-"}}</td>
                                                 <td>{{obj.user|default:"-"}}</td>
                                                 <td>{{obj.datetime|default:"-"}}</td>
+                                                <td>
+                                                    <a href="{% url 'amend-amount-update' project.uuid obj.id %}" class="btn btn-md btn-warning">
+                                                    <i class="fa fa-edit m-1" style="font-size: 0.8rem;"></i>
+                                                </a>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -563,6 +569,8 @@
                                             <th class="text-uppercase font-weight-bold text-center py-3">Komentariu</th>
                                             <th class="text-uppercase font-weight-bold py-3">Kria husi</th>
                                             <th class="text-uppercase font-weight-bold py-3">Datetime</th>
+                                            <th class="text-uppercase font-weight-bold py-3">#</th>
+
                                         </tr>
                                     </thead>
                                     <tbody style="font-size: 0.875rem;">
@@ -574,6 +582,10 @@
                                                 <td>{{obj.comments|default:"-"}}</td>
                                                 <td>{{obj.user|default:"-"}}</td>
                                                 <td>{{obj.datetime|default:"-"}}</td>
+                                                <td>
+                                                    <a href="{% url 'amend-time-update' project.uuid obj.id %}" class="btn btn-md btn-warning">
+                                                    <i class="fa fa-edit m-1" style="font-size: 0.8rem;"></i>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>

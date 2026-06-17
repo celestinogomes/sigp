@@ -146,7 +146,6 @@ def AmendmentAmountAdd(request, uuid):
             current_amend_amount = contract_amend.amendment_amount or Decimal('0.00')
             new_amount = Decimal(str(instance.amount)) 
             
-            current_total = instance.amount_total or Decimal('0.00')
             
             instance.amount_total = current_amend_amount + new_amount
             instance.save()
@@ -165,6 +164,52 @@ def AmendmentAmountAdd(request, uuid):
     conteudo = {
         "title": "Aumenta Amendment Amount",
         "subtitle": "Formulario Aumenta Amendment Amount",
+        "group": group, 
+        "form": form, 
+        "uuid": uuid
+    }
+    
+    return render(request, 'amendment/form.html', conteudo)
+
+
+@login_required
+@allow_user(allow_roles=['admin', 'focal_point'])
+def AmendmentAmountUpdate(request, uuid, amendment_amount_id):
+    project = get_object_or_404(Project, uuid=uuid)
+    contract_amend = get_object_or_404(ContractAmendment, project=project)
+    
+    amend_amount_instance = get_object_or_404(AmendmenAmount, id=amendment_amount_id, project=project)
+    
+    group = request.user.groups.first().name if request.user.groups.exists() else "No Group"
+    
+    if request.method == "POST":
+        old_amount = Decimal(str(amend_amount_instance.amount))        
+        form = AmendmentAmountForm(request.POST, instance=amend_amount_instance)
+        
+        if form.is_valid():
+            instance = form.save(commit=False)            
+            current_total_amend = contract_amend.amendment_amount or Decimal('0.00')
+            new_amount = Decimal(str(instance.amount))
+            
+            updated_total = current_total_amend - old_amount + new_amount
+            
+            instance.amount_total = updated_total
+            instance.save()
+            
+            contract_amend.amendment_amount = updated_total
+            contract_amend.save()
+            
+            messages.success(request, 'Amendmen Amount atualiza ona')
+            return redirect('proj-detail', uuid)
+        else:
+            messages.error(request, 'Formulario invalidu, favor cek fali dadus.')
+            print(form.errors)
+    else:
+        form = AmendmentAmountForm(instance=amend_amount_instance)
+        
+    conteudo = {
+        "title": "Atualiza Amendment Amount",
+        "subtitle": "Formulario Data Atualiza Amendment Amount",
         "group": group, 
         "form": form, 
         "uuid": uuid
@@ -209,3 +254,41 @@ def AmendmentTimeAdd(request, uuid):
     
     return render(request, 'amendment/form.html', conteudo)
 
+
+@login_required
+@allow_user(allow_roles=['admin', 'focal_point'])
+def AmendmentTimeUpdate(request, uuid, amendment_time_id):
+    project = get_object_or_404(Project, uuid=uuid)
+    contract_amend = get_object_or_404(ContractAmendment, project=project)
+    
+    amend_time_instance = get_object_or_404(AmendmenTime, id=amendment_time_id, project=project)
+    
+    group = request.user.groups.first().name if request.user.groups.exists() else "No Group"
+    
+    if request.method == "POST":
+        form = AmendmentTimeForm(request.POST, instance=amend_time_instance)
+        
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.save()
+            
+            contract_amend.amendment_end_date = instance.end_date
+            contract_amend.save()
+            
+            messages.success(request, 'Amendment Tempo atualiza ona')
+            return redirect('proj-detail', uuid)
+        else:
+            messages.error(request, 'Formulario invalidu, favor cek fali dadus.')
+            print(form.errors)
+    else:
+        form = AmendmentTimeForm(instance=amend_time_instance)
+        
+    conteudo = {
+        "title": "Atualiza Amendment Tempo",
+        "subtitle": "Formulario Data Atualiza Amendment Tempo",
+        "group": group, 
+        "form": form, 
+        "uuid": uuid
+    }
+    
+    return render(request, 'amendment/form.html', conteudo)

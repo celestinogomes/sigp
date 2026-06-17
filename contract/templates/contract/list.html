@@ -114,7 +114,6 @@
 <script>
 $(document).ready(function() {
     $('#myTable').DataTable({
-        // Karakter 'Q' di dalam dom memicu pemuatan SearchBuilder di atas tabel
         dom: 'QBlfrtip',        
         searching: true,
         buttons: [
@@ -127,7 +126,6 @@ $(document).ready(function() {
                 }
             }
         ],
-        // Opsional: Anda bisa mengecualikan kolom tertentu dari SearchBuilder (misal: kolom No dan Action)
         searchBuilder: {
             columns: [1, 2, 3, 4, 5, 6, 7, 8] // Hanya mengaktifkan pencarian untuk kolom data teks
         }
