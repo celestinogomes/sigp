@@ -5,11 +5,13 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from accounts.forms import *
+from django.db import transaction
 
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 
 @login_required
+@transaction.atomic()
 def userList(request):
     objects = []
     users = User.objects.all().exclude(id=request.user.id).select_for_update('employeeuser')
