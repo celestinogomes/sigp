@@ -1,0 +1,240 @@
+{% extends 'layout/base.html' %} 
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load static %}
+<div class="page-wrapper">
+    <div class="page-header d-print-none">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <div class="page-pretitle">Relatorio</div>
+                    <h2 class="page-title">{{ title }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <div class="container-xl">
+            
+            <div class="card mb-4 d-print-none">
+                <div class="card-body">
+                    <form method="get" id="filterForm">
+                        <div class="row g-3 align-items-center">
+                            <div class="col-md-9">
+                                <label class="form-label text-muted fw-bold">Filtru tuir Tinan (Tinan)</label>
+                                <select class="form-select" name="year" onchange="document.getElementById('filterForm').submit();">
+                                    {% for a in lista_anos %}
+                                        <option value="{{ a.ano }}" {% if year_selected == a.ano|stringformat:"s" %}selected{% endif %}>
+                                            {{ a.ano }}
+                                        </option>
+                                    {% empty %}
+                                        <option value="2026" selected>2026</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3 align-self-end">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-filter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-4 2v-9l-4.414 -4.414a2 2 0 0 1 -.586 -1.414v-2.172z" /></svg>
+                                    Filtru
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row row-cards">
+                
+                <div class="col-12">
+                    <div class="card card-md border-primary shadow-sm" style="border-left: 5px solid var(--tblr-primary) !important;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div>
+                                    <h3 class="card-title text-uppercase tracking-wider text-primary mb-1">Ezekusaun Tinan Ida Ne</h3>
+                                    <p class="text-muted small mb-0">Resumu finanseiru ba alokasaun no ezekusaun orsamentu tinan {{year_selected}}</p>
+                                </div>
+                                <span class="badge bg-primary-lt fs-3 px-3 py-2 fw-bold">{{ per_execution|default:"0.00"|intcomma }}%</span>
+                            </div>
+                            
+                            <div class="row g-3 my-2">
+                                <div class="col-md-4">
+                                    <div class="bg-light p-3 rounded">
+                                        <div class="text-muted small mb-1">Total Alokasaun</div>
+                                        <div class="h2 fw-bold text-dark mb-0">$ {{ total_alocation|default:"0.00"|intcomma }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="bg-light p-3 rounded">
+                                        <div class="text-muted small mb-1">Total Ezekusaun</div>
+                                        <div class="h2 fw-bold text-success mb-0">$ {{ total_execution|default:"0.00"|intcomma }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="bg-light p-3 rounded">
+                                        <div class="text-muted small mb-1">Balansu</div>
+                                        <div class="h2 fw-bold text-danger mb-0">$ {{ total_balance|default:"0.00"|intcomma }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 mb-2">
+                                <div class="d-flex justify-content-between small text-muted mb-1">
+                                    <span>Progresu Ezekusaun</span>
+                                    <span class="fw-bold">{{ per_execution|default:"0.00"|intcomma }}%</span>
+                                </div>
+                                <div class="progress progress-md">
+                                    <div class="progress-bar bg-primary" style="width: {{ per_execution|default:'0.00'|intcomma }}%" role="progressbar" aria-valuenow="{{ per_execution|default:'75.5' }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+
+                            <div class="pt-3 border-top mt-3">
+                                <a href="{% url 'r-list-all' year_selected %}" class="btn btn-md btn-outline-primary w-100 d-flex justify-content-between align-items-center">
+                                    <span>Detalha</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs m-0" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card h-100 card-hover-shadow transition">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="avatar bg-blue-lt me-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M00h24v24Hz" fill="none"/><path d="M3 4m0 1a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z" /><path d="M7 20h10" /><path d="M9 16v4" /><path d="M15 16v4" /><path d="M8 8l3 3l4 -4" /></svg>
+                                </div>
+                                <div>
+                                    <h3 class="card-title mb-0">Relatorio tuir Programa</h3>
+                                    <span class="text-muted small">Monitorizasaun sub-programa sira</span>
+                                </div>
+                            </div>
+                            <div class="my-3 flex-grow-1">
+                                <div class="h1 mb-1 fw-bold">{{ total_programa|default:"0" }}</div>
+                                <div class="text-muted small">Programa Ativu implementadu</div>
+                            </div>
+                            <div class="pt-3 border-top mt-auto">
+                                <a href="{% url 'r-program-dashboard' year_selected %}" class="btn btn-md btn-outline-primary w-100 d-flex justify-content-between align-items-center">
+                                    <span>Detalha</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs m-0" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M00h24v24Hz" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: Relatorio tuir Dono do Projeto -->
+                <div class="col-md-6">
+                    <div class="card h-100 card-hover-shadow transition">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="avatar bg-green-lt me-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M00h24v24Hz" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" /></svg>
+                                </div>
+                                <div>
+                                    <h3 class="card-title mb-0">Relatorio tuir Dono do Projeto</h3>
+                                    <span class="text-muted small">Klasifikasaun tuir dono do projeto</span>
+                                </div>
+                            </div>
+                            <div class="my-3 flex-grow-1">
+                                <div class="h1 mb-1 fw-bold">{{ total_dono|default:"0" }}</div>
+                                <div class="text-muted small">Dono do Projeto nebe hetan alokasaun iha tinan {{year_selected}}</div>
+                            </div>
+                            <div class="pt-3 border-top mt-auto">
+                                <a href="{% url 'r-owner-dashboard' year_selected %}" class="btn btn-md btn-outline-primary w-100 d-flex justify-content-between align-items-center">
+                                    <span>Detalha</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs m-0" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M00h24v24Hz" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h3 class="card-title fw-bold text-dark">Progresu Pagamentu Mensal + Montante Pagamento</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="chartPayment" style="width:100%; height:400px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script src="{% static 'highcharts/highchart.js' %}"></script>
+<script src="{% static 'highcharts/exporting.js' %}"></script>
+<script src="{% static 'highcharts/export-data.js' %}"></script>
+<script src="{% static 'highcharts/accessibility.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dataNominalBar = {{ chart_payment_month|default:"[]" }};
+        const dataJumlahLine = {{ chart_total_project|default:"[]" }};
+
+        Highcharts.chart('chartPayment', {
+        chart: {
+            style: { fontFamily: 'inherit' }
+        },
+        title: {
+            text: 'Grafiku Pagamento + Projeto Tinan - ' + '{{ year_selected }}',
+            style: { fontSize: '16px', fontWeight: 'bold' }
+        },
+        xAxis: [{
+            categories: ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            crosshair: true
+        }],
+        yAxis: [{ 
+            title: { text: 'Total Pagamento (USD)', style: { color: '#206bc4' } },
+            labels: { formatter: function () { return '$' + Highcharts.numberFormat(this.value, 0, '.', ','); } }
+        }, { 
+            title: { text: 'Total Projetu', style: { color: '#f59e0b' } },
+            opposite: true
+        }],
+        tooltip: { shared: true, useHTML: true },
+        series: [{
+            name: 'Total Pagamentu (USD)',
+            type: 'areaspline',
+            yAxis: 0,
+            data: dataNominalBar,
+            color: '#206bc4',
+            fillColor: {
+                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                stops: [
+                    [0, 'rgba(32, 107, 196, 0.4)'], 
+                    [1, 'rgba(32, 107, 196, 0.0)']  
+                ]
+            }
+        }, {
+            name: 'Total Projetu',
+            type: 'spline',
+            yAxis: 1,
+            data: dataJumlahLine,
+            color: '#f59e0b',
+            lineWidth: 3,
+            marker: { radius: 5 }
+        }],
+        credits: { enabled: false }
+    });
+    });
+</script>
+
+
+<style>
+    .card-hover-shadow {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-hover-shadow:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+    }
+</style>
+{% endblock script %}

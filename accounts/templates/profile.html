@@ -1,0 +1,35 @@
+{% extends 'layout/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="page-body">
+  <div class="container-xl">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible">
+      <a href="#" class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    
+    <div class="row">
+      <div class="col-md-8 mx-auto">
+        <div class="card">
+          <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="card-title">Profile Settings</h3>
+            <a href="{% url 'change_password' %}" class="btn btn-light btn-sm">
+              <i class="ti ti-key"></i> Change Password
+            </a>
+          </div>
+          <div class="card-body">
+            <form method="post">
+              {% csrf_token %}
+              {% crispy form %}
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

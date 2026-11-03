@@ -1,0 +1,88 @@
+{% extends 'layout/base.html' %} 
+{% block content %}
+{% load static %}
+<div class="page-wrapper">
+    <!-- Page header -->
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <h2 class="page-title">
+                <a href="{% url 'add-funsionariu' %}" class="btn btn-outline-primary">Aumenta Funsionario</a>
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page body -->
+    <div class="page-body">
+      <div class="container-xl">
+        <div class="card">
+          <div class="card-header text-white bg-primary">Dadus Funsionariu</div>
+          <div class="card-body">
+            <div id="table-default" class="table-responsive">
+              <table id="example2" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Nu_Reg</th>
+                    <th>Naran</th>
+                    <th>Pozisaun</th>
+                    <th>Departamento</th>
+                    <th>Programa</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody class="table-tbody">
+                    {% for data in listaFunsionariu %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ data.nu_registu }}</td>
+                    <td>{{ data.naran_kompletu }}</td>
+                    <td>{{ data.pozisaun }}</td>
+                    <td>{{ data.department }}</td>
+                    <td>
+                      {% for obj1 in data.program.all %}
+                        {{obj1.name}} <br>
+                      {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{% url 'update-funsionariu' data.nu_registu %}" class="btn btn-sm btn-success" title="Hadia"><i class="ti ti-pencil"></i> Hadia</a>
+                        <button class="btn btn-sm btn-danger" title="Hamos" data-bs-toggle="modal" data-bs-target="#modal-delete-{{ data.nu_registu }}"><i class="ti ti-trash"></i> Hamos</button>
+                        {% if not data.has_user %}
+                        <a href="{% url 'kria_user_fun' data.nu_registu %}" class="btn btn-sm btn-primary">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-lock">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z" />
+                            <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" />
+                            <path d="M8 11v-4a4 4 0 1 1 8 0v4" />
+                          </svg>
+                          Kria User
+                        </a>
+                        {% endif %}
+                    </td>
+                  </tr>
+
+                  <div class="modal modal-blur fade" id="modal-delete-{{ data.nu_registu }}" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-body">
+                          <div class="modal-title">Ita-boot Serteza?</div>
+                          <div>Dadus funsionariu ho naran {{ data.naran_kompletu }} sei hamoos ho permanente.</div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">Kansela</button>
+                          <a href="{% url 'delete-funsionariu' data.nu_registu %}" class="btn btn-danger">Sim, Hamoos</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock content %}

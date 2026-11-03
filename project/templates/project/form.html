@@ -1,0 +1,136 @@
+{% extends 'layout/base.html' %} 
+{% load crispy_forms_tags %}
+{% block content %}
+{% load static %}
+<div class="page-wrapper">
+    <div class="page-header d-print-none">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <div class="page-pretitle"><a href="{% url 'proj-lists' %}">Lista Projeto</a></div>
+                    <h2 class="page-title">{{ title }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <div class="container-xl">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="card shadow-sm">
+                <div class="card-header justify-content-between align-items-center bg-transparent">
+                    <h3 class="card-title text-primary font-weight-bold">{{ subtitle }}</h3>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="POST" action="" novalidate>
+                        {% csrf_token %}
+                        
+                        <h4 class="text-secondary mb-3 border-bottom pb-2">1. Informasaun Projetu</h4>
+                        {% crispy project_form %}
+                        
+                        <h4 class="text-secondary mt-4 mb-3 border-bottom pb-2">2. Lokalizasaun Projetu</h4>
+                        {% crispy proj_location_form %}
+                        
+                        <h4 class="text-secondary mt-4 mb-3 border-bottom pb-2">3. Detallu Kontratu</h4>
+                        {% crispy contract_form %}
+                        
+                        <div class="form-group mt-4 text-end">
+                            <a href="{% url 'proj-lists' %}" class="btn btn-light me-2">Kansela</a>
+                            <button type="submit" class="btn btn-primary">
+                                Rai Dadus
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const municipalitySelect = document.getElementById('id_municipality');
+    const postSelect = document.getElementById('id_administrative_post');
+    const villageSelect = document.getElementById('id_village');
+    // 1. Tambahkan variabel untuk Aldeia
+    const aldeiaSelect = document.getElementById('id_aldeia'); 
+
+    municipalitySelect.addEventListener('change', function () {
+        const municipalityId = this.value;
+        
+        postSelect.innerHTML = '<option value="">---------</option>';
+        villageSelect.innerHTML = '<option value="">---------</option>';
+        aldeiaSelect.innerHTML = '<option value="">---------</option>'; // Reset Aldeia
+
+        if (!municipalityId) return;
+
+        fetch(`/api/load-posts/?municipality_id=${municipalityId}`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.textContent = item.name;
+                    postSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading administrative posts:', error));
+    });
+
+    postSelect.addEventListener('change', function () {
+        const postId = this.value;
+
+        villageSelect.innerHTML = '<option value="">---------</option>';
+        aldeiaSelect.innerHTML = '<option value="">---------</option>'; // Reset Aldeia
+
+        if (!postId) return;
+
+        fetch(`/api/load-villages/?administrative_post_id=${postId}`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.textContent = item.name;
+                    villageSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading villages:', error));
+    });
+
+    // 2. Tambahkan Event Listener Baru untuk Village -> Aldeia
+    villageSelect.addEventListener('change', function () {
+        const villageId = this.value;
+
+        aldeiaSelect.innerHTML = '<option value="">---------</option>';
+
+        if (!villageId) return;
+
+        // Pastikan path URL ini sesuai dengan setup di urls.py Anda (misal: /api/load-aldeia/)
+        fetch(`/api/load-aldeia/?village_id=${villageId}`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.textContent = item.name;
+                    aldeiaSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading aldeias:', error));
+    });
+});
+</script>
+{% endblock script %}

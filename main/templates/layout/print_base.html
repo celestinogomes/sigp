@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Formulário de Despacho {{vdir.archive_no}}</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            font-size: 15px;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+        }
+
+        .title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .subtitle {
+            font-size: 1em;
+            margin: 5px 0;
+        }
+
+        .form-section {
+            border: 1px solid #000;
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-field {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .signature-box {
+            border: 1px solid #000;
+            padding: 15px;
+            margin-top: 20px;
+            min-height: 100px;
+            text-align: center;
+        }
+
+        .footer {
+            font-size: 0.8em;
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{% static 'images/emblema.png' %}" alt="Emblema Nacional" class="logo">
+        <div class="title">REPÚBLICA DEMOCRÁTICA DE TIMOR-LESTE</div>
+        <div class="subtitle">Fundo das Infraestruturas</div>
+        <div class="subtitle">Secretariado dos Grandes Projetos</div>
+    </div>
+    <hr style="border: none; border-top: 5px double #000; margin: 20px 0; border-bottom: 2px double #000;">
+
+    <h4 style="text-align: center; margin: 20px 0;">FORMULÁRIO DE DESPACHO</h4>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

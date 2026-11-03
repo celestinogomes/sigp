@@ -1,0 +1,181 @@
+{% extends 'layout/base.html' %} 
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="page-wrapper">
+    <div class="page-header d-print-none">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <div class="page-pretitle"><a href="{% url 'r-dashboard' %}">Dashboard Relatorio</a></div>
+                    <h2 class="page-title">{{ title }} - Tinan {{ year_selected }}</h2>
+                </div>
+                <div class="col-auto ms-auto d-print-none">
+                    <button type="button" onclick="window.print()" class="btn btn-outline-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" /><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" /><path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" /></svg>
+                        Imprime
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <div class="container-xl">
+            
+            <div class="row row-cards mb-4">
+                <div class="col-sm-6 col-lg-4">
+                    <div class="card card-sm">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <span class="bg-primary text-white avatar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 1 0 4h-2a2 2 0 0 1 -1.8 -1" /><path d="M12 6v2m0 8v2" /></svg>
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <div class="font-weight-medium">Total Alokasaun</div>
+                                    <div class="text-secondary">USD {{ summary.allocation|intcomma }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                    <div class="card card-sm">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <span class="bg-success text-white avatar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 14l2 2l4 -4" /></svg>
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <div class="font-weight-medium">Total Ezekusaun ({{ summary.execution_percent|floatformat:2 }}%)</div>
+                                    <div class="text-secondary">USD {{ summary.execution|intcomma }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                    <div class="card card-sm">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <span class="bg-warning text-white avatar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 7v5l3 3" /></svg>
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <div class="font-weight-medium">Total Balansu ({{ summary.balance_percent|floatformat:2 }}%)</div>
+                                    <div class="text-secondary">USD {{ summary.balance|intcomma }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Lista Relatorio Finansas por Programa</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="table card-table table-vcenter text-nowrap table-hover">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Programa</th>
+                                <th class="text-end">Montante Alokasaun</th>
+                                <th class="text-end">Ezekusaun ($)</th>
+                                <th class="text-center" style="width: 15%;">Ezekusaun (%)</th>
+                                <th class="text-end">Balansu ($)</th>
+                                <th class="text-center" style="width: 15%;">Balansu (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for program in programs_report %}
+                            <tr class="table-light font-weight-bold" style="border-top: 2px solid #cbd5e1;">
+                                <td class="text-wrap">
+                                    {% if program.code %}
+                                        <span class="badge bg-blue-lt me-2">{{ program.code }}</span>
+                                    {% else %}
+                                        <span class="badge bg-blue-lt me-2">-</span>
+                                    {% endif %}
+                                    <strong class="text-dark"> <a href="{% url 'r-program-list-all' year_selected program.id %}">{{ program.name }}</a> </strong>
+                                </td>
+                                <td class="text-end text-primary font-weight-bold">USD {{ program.allocation|intcomma }}</td>
+                                <td class="text-end text-success font-weight-bold">USD {{ program.execution|intcomma }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                        <span class="font-weight-bold text-success">{{ program.execution_percent|floatformat:2 }}%</span>
+                                        <div class="progress progress-xs w-100">
+                                            <div class="progress-bar bg-success" style="width: {{ program.execution_percent }}%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-end text-warning font-weight-bold">USD {{ program.balance|intcomma }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                        <span class="font-weight-bold text-warning">{{ program.balance_percent|floatformat:2 }}%</span>
+                                        <div class="progress progress-xs w-100">
+                                            <div class="progress-bar bg-warning" style="width: {{ program.balance_percent }}%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            {% for sub in program.sub_programs %}
+                            <tr>
+                                <td class="text-wrap" style="padding-left: 2.5rem;">
+                                    <div class="text-secondary small font-weight-medium">
+                                        <i class="fe fe-corner-down-right text-muted me-1"></i> 
+                                        <a href="{% url  'r-sub-program-list-all' year_selected sub.id %}">
+
+                                            {% if sub.code %}[{{ sub.code }}] {% endif %}{{ sub.name }}
+                                        </a>
+                                    </div>
+                                </td>
+                                <td class="text-end text-secondary">USD {{ sub.allocation|intcomma }}</td>
+                                <td class="text-end text-secondary">USD {{ sub.execution|intcomma }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                        <span class="text-muted small">{{ sub.execution_percent|floatformat:2 }}%</span>
+                                        <div class="progress progress-xs w-100" style="height: 3px;">
+                                            <div class="progress-bar bg-teal" style="width: {{ sub.execution_percent }}%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-end text-secondary">USD {{ sub.balance|intcomma }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                        <span class="text-muted small">{{ sub.balance_percent|floatformat:2 }}%</span>
+                                        <div class="progress progress-xs w-100" style="height: 3px;">
+                                            <div class="progress-bar bg-orange" style="width: {{ sub.balance_percent }}%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-secondary py-4">
+                                    -
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+{% endblock script %}

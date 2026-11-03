@@ -1,0 +1,66 @@
+{% extends 'layout/base.html' %} {% block content %}
+
+<div class="page-body">
+  <div class="container-xl">
+    {% if messages %} {% for message in messages %}
+    <div class="alert alert-success alert-dismissible">
+      <!-- <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> -->
+      <a href="" data-dismiss="alert" aria-hidden="true">&times;</a>
+      {{ message }}
+    </div>
+    {% endfor %} {% endif %}
+    <!-- Page header -->
+   
+    <div class="card">
+      <div class="card-header bg-primary text-white">Lista Dadus Utilizador</div>
+      <div class="card-body">
+        <table id="example2" class="table table-striped">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Username</th>
+              <th>Funsionariu</th>
+              <th>Group</th>
+              <th>User Status</th>
+              <th>Password</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for data in obj %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ data.0.username }}</td>
+              <td>{% if data.0.employeeuser %}{{ data.0.employeeuser.naran_kompletu }}{% endif %}</td>
+              <td>{{ data.0.groups.all|join:", " }}</td>
+              <td>
+                  {% if data.0.is_active %}<span class="badge bg-success">Ativu </span>{% else %}<span class="badge bg-danger">La Ativu </span> {% endif %}
+                  
+              </td>
+              <td>
+                  {% if data.1 == 'password123' %}
+                  <span class="badge bg-primary">Default</span>
+                  {% else %}
+                  <span class="badge bg-info">Alteradu</span>
+                  {% endif %}
+              </td>
+              <td class="text-center">
+                {% if data.0.is_active == False %}
+                    <a href="{% url 'ativuUser' data.0.id %}" class="btn btn-success btn-sm text-white"><i class="ti ti-check"></i> Ativa</a>
+                {% else %}
+                    <a href="{% url 'desativuUser' data.0.id %}" class="btn btn-danger btn-sm text-white"><i class="ti ti-ban"></i> Dezativa</a>
+                    <a href="{% url 'deleteUsers' data.0.id %}" class="btn btn-danger btn-sm text-white"><i class="ti ti-trash"></i> Delete</a>
+                {% endif %}
+                {% if not data.1 == 'password123' %}
+                <a href="{% url 'resetUsersPassword' data.0.id %}" class="btn btn-secondary btn-sm text-white"><i class="ti ti-restore"></i> Reset Password</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
