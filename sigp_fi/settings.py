@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-60)r^f@z+ef3po9ndk9-r7qriq6kb$^w&$3g0ij$cq-hsn$hj@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['sigp.mpsapps.org','31.97.109.120']
 
 
 # Application definition
@@ -93,12 +93,15 @@ WSGI_APPLICATION = 'sigp_fi.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "sigp_db",
+        "USER": "root",
+        "PASSWORD": "mpspa$$w0rd12",
+        "HOST": "localhost",
+        "PORT": "3306",
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -140,7 +143,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
-
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Login Redirect URL
 LOGIN_REDIRECT_URL = 'index'
 # Login URL
