@@ -46,6 +46,10 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
                         Justifikasaun
                     </a>
+                    <a href="{% url 'proj-bank-guarantee-update' project.uuid %}" class="btn btn-warning">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
+                        Bank Guarantee
+                    </a>
                     {% endif %}
                 </div>
             </div>
@@ -119,6 +123,10 @@
                                         <th>Postu Administrativu</th>
                                         <th>Suku</th>
                                         <th>Aldeia</th>
+                                        <th>Start Latitude</th>
+                                        <th>Start Longitude</th>
+                                        <th>End Latitude</th>
+                                        <th>End Longitude</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -127,6 +135,10 @@
                                         <td>{{ location.administrative_post.name }}</td>
                                         <td><span class="text-muted">{{ location.village.name }}</span></td>
                                         <td><span class="text-muted">{{ location.aldeia.name|default:"" }}</span></td>
+                                        <td><span class="text-muted">{{ location.latitude_start|default:"" }}</span></td>
+                                        <td><span class="text-muted">{{ location.longitude_start|default:"" }}</span></td>
+                                        <td><span class="text-muted">{{ location.latitude_end|default:"" }}</span></td>
+                                        <td><span class="text-muted">{{ location.longitude_end|default:"" }}</span></td>    
                                     </tr>
                                 </tbody>
                             </table>
@@ -190,6 +202,41 @@
                                             <span class="badge bg-warning text-white">{{ contract.status }}</span>
                                             <br>
                                             <small>{{status.description|default:"-"}}</small>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Bank Guarantee</th>
+                                        <td class="p-0">
+                                            {% if bank_guarantee %}
+                                            <table class="table table-sm table-bordered mb-0">
+                                                <thead class="bg-light text-muted">
+                                                    <tr>
+                                                        <th></th>
+                                                        <th class="text-center">Persentajen</th>
+                                                        <th class="text-center">Montante</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Performance Security</td>
+                                                        <td class="text-center">{% if bank_guarantee.performance_security is not None %}{{ bank_guarantee.performance_security|floatformat:"-2" }}%{% else %}-{% endif %}</td>
+                                                        <td class="text-center font-weight-bold">$ {{ bank_guarantee.performance_security_amount|default:"-"|intcomma }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Advance Payment</td>
+                                                        <td class="text-center">{% if bank_guarantee.advance_payment is not None %}{{ bank_guarantee.advance_payment|floatformat:"-2" }}%{% else %}-{% endif %}</td>
+                                                        <td class="text-center font-weight-bold">$ {{ bank_guarantee.amount_advance_payment|default:"-"|intcomma }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Retention</td>
+                                                        <td class="text-center">{% if bank_guarantee.retention is not None %}{{ bank_guarantee.retention|floatformat:"-2" }}%{% else %}-{% endif %}</td>
+                                                        <td class="text-center font-weight-bold">$ {{ bank_guarantee.retention_amount|default:"-"|intcomma }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            {% else %}
+                                            <span class="text-muted px-3">-</span>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 </table>
@@ -510,7 +557,6 @@
                                             <th class="text-uppercase font-weight-bold text-center py-3">Komentariu</th>
                                             <th class="text-uppercase font-weight-bold py-3">Kria husi</th>
                                             <th class="text-uppercase font-weight-bold py-3">Datetime</th>
-                                            <th class="text-uppercase font-weight-bold py-3">#</th>
                                         </tr>
                                     </thead>
                                     <tbody style="font-size: 0.875rem;">
@@ -523,11 +569,6 @@
                                                 <td>{{obj.comments|default:"-"}}</td>
                                                 <td>{{obj.user|default:"-"}}</td>
                                                 <td>{{obj.datetime|default:"-"}}</td>
-                                                <td>
-                                                    <a href="{% url 'amend-amount-update' project.uuid obj.id %}" class="btn btn-md btn-warning">
-                                                    <i class="fa fa-edit m-1" style="font-size: 0.8rem;"></i>
-                                                </a>
-                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -569,8 +610,6 @@
                                             <th class="text-uppercase font-weight-bold text-center py-3">Komentariu</th>
                                             <th class="text-uppercase font-weight-bold py-3">Kria husi</th>
                                             <th class="text-uppercase font-weight-bold py-3">Datetime</th>
-                                            <th class="text-uppercase font-weight-bold py-3">#</th>
-
                                         </tr>
                                     </thead>
                                     <tbody style="font-size: 0.875rem;">
@@ -582,10 +621,6 @@
                                                 <td>{{obj.comments|default:"-"}}</td>
                                                 <td>{{obj.user|default:"-"}}</td>
                                                 <td>{{obj.datetime|default:"-"}}</td>
-                                                <td>
-                                                    <a href="{% url 'amend-time-update' project.uuid obj.id %}" class="btn btn-md btn-warning">
-                                                    <i class="fa fa-edit m-1" style="font-size: 0.8rem;"></i>
-                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>

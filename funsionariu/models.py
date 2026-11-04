@@ -19,7 +19,7 @@ class Funsionariu(models.Model):
     hftin_atual = models.CharField(max_length=25, verbose_name='Hela Fatin Atual')
     nu_kontakt = models.CharField(max_length=15, verbose_name='Numeru Kontaktu')
     email = models.EmailField(verbose_name='Email')
-    program = models.ManyToManyField(Program, verbose_name='Programa', null=True, blank=True)
+    program = models.ManyToManyField(Program, verbose_name='Programa', blank=True)
     department = models.ForeignKey(Departamento, on_delete=models.CASCADE, verbose_name='Departamento')
     pozisaun = models.ForeignKey(Pozisaun, on_delete=models.CASCADE, verbose_name='Pozisaun')
     user_level = models.CharField(max_length=20, choices=USER_LEVELS, default='staff', verbose_name='User Level')

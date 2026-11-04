@@ -5,12 +5,12 @@ from django.contrib import messages
 from django.db import transaction
 
 from project.models import Project, ProjectLocation, ProjectJustification, ProjectStatus
-from contract.models import Contract, ContractAmendment
+from contract.models import Contract, ContractAmendment, BankGuarantee
 from allocation.models import Allocation, Transferencia
 from amendment.models import AmendmenAmount, AmendmenTime
 from payment.models import Payment, PaymentHistory
 
-from contract.forms import ContractForm
+from contract.forms import ContractForm, BankGuaranteeForm
 from project.forms import ProjectForm, ProjectLocationForm, ProjectStatusForm, ProjectJustificationForm
 from funsionariu.models import Funsionariu
 
@@ -177,6 +177,7 @@ def ProjectUpdate(request, uuid):
     return render(request, 'project/form3.html', conteudo)
 
 
+
 @login_required
 @allow_user(allow_roles=['admin' , 'focal_point', 'finance', 'diretor'])
 def ProjectDetail(request, uuid):
@@ -185,6 +186,7 @@ def ProjectDetail(request, uuid):
     location = get_object_or_404(ProjectLocation, project=project)
     contract = get_object_or_404(Contract, project=project)
     amd_contract = ContractAmendment.objects.filter(project=project).last()
+    bank_guarantee = BankGuarantee.objects.filter(contract=contract).last()
     allocations = Allocation.objects.filter(project=project).all().order_by('-year')
     allocation = Allocation.objects.filter(project=project, is_active=True).last()
     transferencia = Transferencia.objects.filter(project=project, allocation=allocation).order_by('-pk')
@@ -197,6 +199,7 @@ def ProjectDetail(request, uuid):
         "title" : "Detalha Projeto",
         "subtitle": "Informasaun Projeto",
         'project' : project, 'location':location,  'amd_contract':amd_contract,
+        'bank_guarantee':bank_guarantee,
         'group':group, 'contract':contract, 'allocations':allocations, 
         'transferencia':transferencia, 'allocation':allocation, 'amendment_amount':amendment_amount,
         'amendment_time':amendment_time, 'payments':payments, 'status':status, 'justification':justification
@@ -274,4 +277,39 @@ def ProjectJustificationUpdate(request, uuid):
         "uuid": uuid
     }
     
+    return render(request, 'project/form2.html', conteudo)
+
+
+
+@login_required
+@allow_user(allow_roles=['admin', 'focal_point'])
+def ProjectBankGuaranteeUpdate(request, uuid):
+    project = get_object_or_404(Project, uuid=uuid)
+    contract = get_object_or_404(Contract, project=project)
+    bank_guarantee = BankGuarantee.objects.filter(contract=contract).last()
+    group = request.user.groups.first().name if request.user.groups.exists() else "No Group"
+
+    if request.method == "POST":
+        form = BankGuaranteeForm(request.POST, instance=bank_guarantee)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.contract = contract
+            instance.user = request.user
+            instance.save()
+
+            messages.success(request, 'Susesu Hadia Bank Guarantee')
+            return redirect('proj-detail', uuid)
+        else:
+            messages.error(request, 'Formulario invalidu, favor cek fali dadus.')
+    else:
+        form = BankGuaranteeForm(instance=bank_guarantee)
+
+    conteudo = {
+        "title": "Hadia Bank Guarantee",
+        "subtitle": "Formulario Hadia Bank Guarantee",
+        "group": group,
+        "form": form,
+        "uuid": uuid
+    }
+
     return render(request, 'project/form2.html', conteudo)

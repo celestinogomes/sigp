@@ -76,15 +76,26 @@ class Project(models.Model):
         verbose_name_plural = "Lista Projeto"
 
 
-
 class ProjectLocation(models.Model):
     project = models.OneToOneField( Project, on_delete=models.CASCADE, null=True, blank=True, related_name="project_location")
     municipality = models.ForeignKey(Municipality, on_delete=models.CASCADE, null=True, blank=True, related_name="project_location_municipality", verbose_name="Municipio" )
     administrative_post = models.ForeignKey(AdministrativePost, on_delete=models.CASCADE, null=True, blank=True, related_name="project_location_administrativepost", verbose_name="Posto Administrativo" )
     village = models.ForeignKey(Village, on_delete=models.CASCADE, null=True, blank=True, related_name="project_location_village", verbose_name="Suco")
     aldeia = models.ForeignKey(Aldeia, on_delete=models.CASCADE, null=True, blank=True, related_name="project_location_aldeia", verbose_name="Aldeia")
+    latitude_start = models.DecimalField(max_digits=20, decimal_places=6, null=True, blank=True, verbose_name="Latitude Inisiu")
+    longitude_start = models.DecimalField(max_digits=20, decimal_places=6, null=True, blank=True, verbose_name="Longitude Inisiu")
+    latitude_end = models.DecimalField(max_digits=20, decimal_places=6, null=True, blank=True, verbose_name="Latitude Remata")
+    longitude_end = models.DecimalField(max_digits=20,decimal_places=6, null=True, blank=True, verbose_name="Longitude Remata")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,  blank=True, related_name="project_location_user")
+    # uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, null=True, blank=True)
+    
+    
     def __str__(self):
-        return f" {self.project.name} - {self.municipality.name}"
+        try:
+            return f"{self.project.name} - {self.municipality.name}"
+        except:
+            return f"Location {self.id}"
+
     class Meta:
         verbose_name = "Lokalizasaun Projeto"
         verbose_name_plural = "Lista Lokalizasaun Projeto"

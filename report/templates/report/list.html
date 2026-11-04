@@ -26,16 +26,17 @@
                     <table id="myTable" class="table card-table table-vcenter text-nowrap table-hover table-bordered">
                         <thead class="bg-light">
                             <tr>
-                                <th colspan="8" class="text-center">Informasaun Projeto</th>
-                                <th colspan="4" class="text-center">Lokal Implementasaun</th>
-                                <th colspan="5" class="text-center">Data Kontratu Original</th>
-                                <th colspan="4" class="text-center">Contract Amendement</th>
-                                <th rowspan="2" class="text-center">Montante Kontratu Final</th>
-                                <th rowspan="2" class="text-center">Montante Kontratu estimativa <br> (FOUN ADN SEIDAUK VERIFIKA)</th>
-                                <th colspan="3" class="text-center">Alokasaun</th>
-                                <th colspan="7" class="text-center">Pagamento</th>
-                                <th rowspan="2" class="text-center">Estadu atual</th>
-                                <th rowspan="2" class="text-center">Informasaun Adisional <br> / Justifikasaun</th>
+                                <th colspan="8" class="text-center bg-light text-black fw-holder" >Informasaun Projeto</th>
+                                <th colspan="8" class="text-center bg-light text-black fw-holder" >Lokal Implementasaun</th>
+                                <th colspan="5" class="text-center bg-light text-black fw-holder" >Data Kontratu Original</th>
+                                <th colspan="6" class="text-center bg-light text-black fw-holder" >Particular Condision of Contract/ Payment Schedule</th>
+                                <th colspan="4" class="text-center bg-light text-black fw-holder" >Contract Amendement</th>
+                                <th rowspan="2" class="text-center bg-light text-black fw-holder">Montante Kontratu Final</th>
+                                <th rowspan="2" class="text-center bg-light text-black fw-holder">Montante Kontratu estimativa <br> (FOUN ADN SEIDAUK VERIFIKA)</th>
+                                <th colspan="3" class="text-center bg-light text-black fw-holder">Alokasaun</th>
+                                <th colspan="7" class="text-center bg-light text-black fw-holder">Pagamento</th>
+                                <th rowspan="2" class="text-center bg-light text-black fw-holder">Estadu atual</th>
+                                <th rowspan="2" class="text-center bg-light text-black fw-holder">Informasaun Adisional <br> / Justifikasaun</th>
                             </tr>
                             <tr>
                                 <th>Nu.</th>
@@ -51,19 +52,37 @@
                                 <th>Postu Administrativu</th>
                                 <th>Suku</th>
                                 <th>Aldeia</th>
+                                <th>Latitude Inisiu</th>
+                                <th>Longitude Inisiu</th>
+                                <th>latitude Remata</th>
+                                <th>longitude Remata</th>
+                                <!-- CONTRACT -->
                                 <th>Numero Kontratu</th>
                                 <th>Data inicio <br> Kontratu</th>
                                 <th>Data Termina <br> Kontratu</th>
                                 <th>Montante Kontratu <br> Original</th>
                                 <th>Tipu Projeto</th>
+                                <!-- BANK GUARANTEE -->
+                                <th>Performance Security (%)</th>
+                                <th>Performance Security (USD)</th>
+                                <th>Advance Payment (%)</th>
+                                <th>Advance Payment (USD)</th>
+                                <th>Retention (%)</th>
+                                <th>Retention (USD)</th>
                                 <!-- AMANDMENT -->
                                 <th>Amandmen Kustu</th>
                                 <th>Amandmen Kustu  <br> Ba Dala</th>
                                 <th>Amandmen Tempu <br> Foun</th>
                                 <th>Amandmen Tempu  <br>Ba Dala</th>
+
+                                <!-- ALOKASAUN & TRANSFERENSIA -->
+
                                 <th>Alokasaun FI {{year_selected}} <br> Original (USD)</th>
                                 <th>Transferensia <br> (-/+ ENVIROMENT)</th>
                                 <th>Alokasaun orsamentu FI <br> {{year_selected}}  / Atual (USD)</th>
+
+                                <!-- PAGAMENTO -->
+                                
                                 <th>Data Pagamento</th>
                                 <th>Pagamento ($)</th>
                                 <th>Kumulativo ($)</th>
@@ -90,13 +109,24 @@
                                 <td>{{ item.administrative_post }}</td>
                                 <td>{{ item.village }}</td>
                                 <td>{{item.aldeia}}</td> 
+                                <td>{{ item.latitude_start|default:"-" }}</td>
+                                <td>{{ item.longitude_start|default:"-" }}</td>
+                                <td>{{ item.latitude_end|default:"-" }}</td>
+                                <td>{{ item.longitude_end|default:"-" }}</td>
                                 <!-- CONTRACT -->
                                 <td>{{ item.contract_number }}</td>
                                 <td>{{ item.contract_start }}</td>
                                 <td>{{ item.contract_end }}</td>
                                 <td class="text-end">{{ item.contract_original|intcomma }}</td>
                                 <td>{{ item.project_type }}</td>
-                                
+                                <!-- BANK GUARANTEE -->
+                                <td class="text-center">{{ item.performance_security|floatformat:2 }}%</td>
+                                <td class="text-end">{{ item.performance_security_amount|intcomma }}</td>
+                                <td class="text-center">{{ item.advance_payment|floatformat:2 }}%</td>
+                                <td class="text-end">{{ item.amount_advance_payment|intcomma }}</td>
+                                <td class="text-center">{{ item.retention|floatformat:2 }}%</td>
+                                <td class="text-end">{{ item.retention_amount|intcomma }}</td>
+                                <!-- AMANDMENT -->
                                 <td class="text-end">{{ item.amend_cost_amount|intcomma }}</td>
                                 <td class="text-center"><span class="badge bg-azure">{{ item.total_amend_amount_count }}</span></td>
                                 <td>{{ item.amend_time_date }}</td>
@@ -126,6 +156,10 @@
                                     </div>
                                 </td>
                             </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="34" class="text-center text-muted py-4">-</td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -135,8 +169,6 @@
         </div>
     </div>
 </div>
-
-
 {% endblock content %}
 
 {% block script %}

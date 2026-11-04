@@ -59,7 +59,8 @@ class ProjectForm(forms.ModelForm):
 class ProjectLocationForm(forms.ModelForm):
 	class Meta:
 		model = ProjectLocation
-		fields = ['municipality', 'administrative_post', 'village', 'aldeia']
+		fields = ['municipality', 'administrative_post', 'village', 'aldeia', 'latitude_start', 'longitude_start', 'latitude_end', 'longitude_end']
+
 
 	def __init__(self, *args, **kwargs):
 		super(ProjectLocationForm, self).__init__(*args, **kwargs)
@@ -110,7 +111,18 @@ class ProjectLocationForm(forms.ModelForm):
 				Column('aldeia', css_class='col-md-3 mb-3'),
 				css_class='row'
 			),
-		)
+		
+			#Aumenta latitude no longitude
+	
+		    Row(
+				Column('latitude_start', css_class='col-md-3 mb-3'),
+				Column('longitude_start', css_class='col-md-3 mb-3'),
+				Column('latitude_end', css_class='col-md-3 mb-3'),
+				Column('longitude_end', css_class='col-md-3 mb-3'),
+				css_class='row'
+			),	
+		)					
+
 
 
 

@@ -110,22 +110,29 @@ def RDashboardListAll(request, slug):
             'owner_code': proj.owner.code if proj.owner else '-',
             'fund_code': proj.fund.code if proj.fund else '-',
             'fund': proj.fund.name if proj.fund else '-',
-            'project_name': proj.name,
+            'project_name': proj.name,  
             
             # Lokalizasaun
             'municipality': proj.project_location.municipality.name if hasattr(proj, 'project_location') and proj.project_location.municipality else '-',
             'administrative_post': proj.project_location.administrative_post.name if hasattr(proj, 'project_location') and proj.project_location.administrative_post else '-',
             'village': proj.project_location.village.name if hasattr(proj, 'project_location') and proj.project_location.village else '-',
             'aldeia': proj.project_location.aldeia.name if hasattr(proj, 'project_location') and proj.project_location.aldeia else '-',
+            'latitude_start': proj.project_location.latitude_start if hasattr(proj, 'project_location') and proj.project_location.latitude_start else '-',
+            'longitude_start': proj.project_location.longitude_start if hasattr(proj, 'project_location') and proj.project_location.longitude_start else '-',
+            'latitude_end': proj.project_location.latitude_end if hasattr(proj, 'project_location') and proj.project_location.latitude_end else '-',
+            'longitude_end': proj.project_location.longitude_end if hasattr(proj, 'project_location') and proj.project_location.longitude_end else '-',
             
             # Kontratu Original & Amandemen
             'company': contract_original.company if contract_original else '-',
             'contract_number': contract_original.number if contract_original else '-',
-            'contract_start': last_amend_time.date if last_amend_time else '-',
-            'contract_end': last_amend_time.end_date if last_amend_time else '-',
+            'contract_start': getattr(contract_original, 'start_date', '-') or getattr(contract_original, 'date', '-'),
+            'contract_end': getattr(last_amend_time, 'end_date', '-') or getattr(contract_original, 'end_date', '-'),
+            #'contract_start': last_amend_time.date if last_amend_time else '-',
+            #'contract_end': last_amend_time.end_date if last_amend_time else '-',
             'contract_original': contract_original.amount if contract_original else 0.00,
             'project_type': proj.type.name if proj.type else '-',
             
+            # Amandemen
             'amend_cost_no': last_amend_amount.number if last_amend_amount else '-',
             'amend_cost_amount': last_amend_amount.amount if last_amend_amount else 0.00,
             'amend_time_no': last_amend_time.number if last_amend_time else '-',
@@ -143,6 +150,16 @@ def RDashboardListAll(request, slug):
             'transfer_count_info': f"Transf. ba-{transfer_count}" if transfer_count > 0 else "Laiha Transferensia",
             'alloc_total': alloc_year.allocation_total if alloc_year else 0.00,
             
+            'performance_security': contract_original.contract_bank_guarantee.first().performance_security if contract_original and contract_original.contract_bank_guarantee.exists() else 0.00,
+            'advance_payment': contract_original.contract_bank_guarantee.first().advance_payment if contract_original and contract_original.contract_bank_guarantee.exists() else 0.00,
+            'retention': contract_original.contract_bank_guarantee.first().retention if contract_original and contract_original.contract_bank_guarantee.exists() else 0.00,
+            'performance_security_amount': contract_original.contract_bank_guarantee.first().performance_security_amount if contract_original and contract_original.contract_bank_guarantee.exists() else 0.00,
+            'amount_advance_payment': contract_original.contract_bank_guarantee.first().amount_advance_payment if contract_original and contract_original.contract_bank_guarantee.exists() else 0.00,
+            'retention_amount': contract_original.contract_bank_guarantee.first().retention_amount if contract_original and contract_original.contract_bank_guarantee.exists() else 0.00,
+            
+
+            
+             # Pagamento
             'payment_date': pay.date if pay.date else '-',
             'payment': pay.payment_amount if pay.payment_amount else '-',
             'physical_progress': pay.physical_progress if pay.physical_progress else '-',

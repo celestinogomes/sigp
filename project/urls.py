@@ -8,4 +8,5 @@ urlpatterns = [
     path('detail/<str:uuid>/',views.ProjectDetail, name='proj-detail'),
     path('status/update/<str:uuid>/',views.ProjectStatusUpdate, name='proj-status-update'),
     path('justification/update/<str:uuid>/',views.ProjectJustificationUpdate, name='proj-justification-update'),
+    path('bank-guarantee/update/<str:uuid>/',views.ProjectBankGuaranteeUpdate, name='proj-bank-guarantee-update'),
 ]

@@ -34,4 +34,18 @@ class ContractAmendment(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, null=True, blank=True)
     def __str__(self):
         return f" {self.project.name} - {self.amendment_amount}"
-    
+
+
+class BankGuarantee(models.Model):
+    contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name="contract_bank_guarantee")
+    performance_security = models.PositiveIntegerField(null=True, blank=True)
+    performance_security_amount = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
+    advance_payment = models.PositiveIntegerField(null=True, blank=True)
+    amount_advance_payment = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
+    retention = models.PositiveIntegerField(null=True, blank=True)
+    retention_amount = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="bank_guarantee_user")
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, null=True, blank=True)
+
+    def __str__(self):
+        return f" {self.contract.project.name} - {self.performance_security_amount}"
